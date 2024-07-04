@@ -4,10 +4,10 @@ on:
     tags:
       - '*.*.*.*'
 jobs:
-  build_and_test:
-
+  Build:
+    permissions:
+      contents: write
     runs-on: windows-latest
-
     steps:
     - name: Get Environment Variables
       run: |
