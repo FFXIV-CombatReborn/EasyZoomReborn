@@ -24,7 +24,7 @@ jobs:
         Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
         
     - name: Build Plugin
-      run: dotnet build --no-restore -c Release -p:AssemblyVersion=${{ env.tag }} -p:FileVersion=${{ env.tag }} -p:InformationalVersion=${{ env.tag }} --output .\build
+      run: dotnet build --no-restore -c Release EasyZoomReborn.sln -p:AssemblyVersion=${{ env.tag }} -p:FileVersion=${{ env.tag }} -p:InformationalVersion=${{ env.tag }} --output .\build
 
     - name: Zip Plugin
       run: Compress-Archive -Path .\build\* -DestinationPath .\build\EasyZoomReborn.zip
