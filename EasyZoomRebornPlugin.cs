@@ -72,6 +72,10 @@ namespace EasyZoomReborn
 			Marshal.StructureToPtr(10000f, MaxFloat, true);
 			PiFloat = Marshal.AllocHGlobal(4);
 			Marshal.StructureToPtr((float)Math.PI, PiFloat, true);
+			MinFloatHeight = Marshal.AllocHGlobal(4);
+			Marshal.StructureToPtr(-3f, MinFloatHeight, true);
+			MaxFloatHeight = Marshal.AllocHGlobal(4);
+			Marshal.StructureToPtr(3f, MaxFloatHeight, true);
 
 			Configuration = (Configuration)pluginInterface.GetPluginConfig() ?? new Configuration();
 			Configuration.Initialize(pluginInterface);
@@ -151,10 +155,14 @@ namespace EasyZoomReborn
         public static IntPtr AngleMin => (IntPtr)(&Cam->minVRotation);
         public static IntPtr AngleMax => (IntPtr)(&Cam->maxVRotation);
 
+        public static IntPtr HeightCamPosition => (IntPtr)(&Cam->lookAtHeightOffset);
+
 
         public static IntPtr ZeroFloat;
 		public static IntPtr PiFloat;
 		public static IntPtr MaxFloat;
+		public static IntPtr MinFloatHeight;
+		public static IntPtr MaxFloatHeight;
 
 		internal static void SetCamDistanceNoReset(bool on)
 		{
@@ -218,6 +226,8 @@ namespace EasyZoomReborn
 			Marshal.FreeHGlobal(ZeroFloat);
 			Marshal.FreeHGlobal(MaxFloat);
 			Marshal.FreeHGlobal(PiFloat);
+			Marshal.FreeHGlobal(MinFloatHeight);
+			Marshal.FreeHGlobal(MaxFloatHeight);
             _getZoomDeltaHook?.Dispose();
             
 		}
