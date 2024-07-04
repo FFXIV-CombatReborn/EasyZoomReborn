@@ -22,13 +22,15 @@ jobs:
       run: |
         Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile latest.zip
         Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
-    - uses: actions/checkout@v2
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore -c Release -p:AssemblyVersion=${{ env.tag }} -p:FileVersion=${{ env.tag }} -p:PackageVersion=${{ env.tag }} -p:InformationalVersion=${{ env.tag }}
+        
+    - name: Build Plugin
+      run: dotnet build --no-restore -c Release EasyZoomReborn\EasyZoomReborn.csproj -p:AssemblyVersion=${{ env.tag }} -p:FileVersion=${{ env.tag }} -p:InformationalVersion=${{ env.tag }} --output .\build
+
+    - name: Zip Plugin
+      run: Compress-Archive -Path .\build\* -DestinationPath .\build\EasyZoomReborn.zip
+
     - name: Publish Plugin
       uses: softprops/action-gh-release@v2
       with:
-        files: .\bin\Release\net8.0-windows\EasyZoomReborn\latest.zip
+        files: ./build/EasyZoomReborn.zip
         token: ${{ secrets.GITHUB_TOKEN }}
