@@ -23,9 +23,9 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Zip Plugin
-      run: Compress-Archive -Path .\build\* -DestinationPath .\build\EasyZoomReborn.zip
+      run: Compress-Archive -Path .\bin\* -DestinationPath .\bin\EasyZoomReborn.zip
     - name: Publish Plugin
       uses: softprops/action-gh-release@v2
       with:
-        files: ./build/EasyZoomReborn.zip
+        files: ./bin/EasyZoomReborn.zip
         token: ${{ secrets.GITHUB_TOKEN }}
