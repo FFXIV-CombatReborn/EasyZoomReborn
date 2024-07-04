@@ -1,0 +1,23 @@
+﻿{
+  "Author": "The Combat Reborn Team",
+  "Name": "EasyZoom Reborn",
+  "InternalName": "EasyZoomReborn",
+  "Description": "Easy zoom distance unlock and fov control. /ez opens the EasyZoomReborn configuration window.",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "zoom",
+    "Camera"
+  ],
+  "CategoryTags": [
+    "jobs"
+  ],
+  "DalamudApiLevel": 10,
+  "LoadRequiredState": 0,
+  "LoadSync": false,
+  "CanUnloadAsync": false,
+  "LoadPriority": 0,
+  "IsTestingExclusive": false,
+  "IconUrl": "https://raw.githubusercontent.com/FFXIV-CombatReborn/RebornAssets/main/IconAssets/EZR_Icon.png",
+  "Punchline": "Easy zoom distance unlock and fov control. /ez opens the EasyZoomReborn configuration window.",
+  "AcceptsFeedback": true
+}
