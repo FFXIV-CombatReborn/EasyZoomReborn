@@ -26,10 +26,21 @@ namespace EasyZoomReborn
 			{
 				if (Utils.TryGetTextureWrap(imageUrl, out var texture))
 				{
-					ImGui.Image(texture.ImGuiHandle, new(texture.Width/4, texture.Height/4));
+					// Calculate padding for ImGui image
+					Vector2 windowSize = ImGui.GetContentRegionAvail();
+					Vector2 imageSize = new(texture.Width / 3 * _scale, texture.Height / 3 * _scale);
+					Vector2 padding = (windowSize - imageSize) * 0.5f;
+					ImGui.Dummy(new Vector2(0, padding.Y - 20.0f));
+					ImGui.SameLine(padding.X);
+					ImGui.Image(texture.ImGuiHandle, imageSize);
 				}
-				
-				if (ImGui.Button("Support on Ko-fi", new Vector2(104 * _scale, 24 * _scale)))
+
+				// Center the ImGui button
+				Vector2 buttonSize = new Vector2(104 * _scale, 24 * _scale);
+				float buttonPosX = (ImGui.GetContentRegionAvail().X - buttonSize.X) * 0.5f;
+				ImGui.SetCursorPosX(buttonPosX);
+
+				if (ImGui.Button("Support on Ko-fi", buttonSize))
 				{
 					OpenUrl("https://ko-fi.com/incognitowater");
 				}
@@ -115,6 +126,18 @@ namespace EasyZoomReborn
 				EasyZoomRebornPlugin.Configuration.ZoomMax = Marshal.PtrToStructure<float>(ZoomMax);
 				EasyZoomRebornPlugin.Configuration.Save();
 			}
+			
+			if (ImGui.DragScalar("Camera Height", ImGuiDataType.Float, HeightCamPosition, 0.05f, MinFloatHeight, MaxFloatHeight, Marshal.PtrToStructure<float>(HeightCamPosition).ToString(), ImGuiSliderFlags.Logarithmic))
+			{
+				EasyZoomRebornPlugin.Configuration.HeightCamPosition = Marshal.PtrToStructure<float>(HeightCamPosition);
+				EasyZoomRebornPlugin.Configuration.Save();
+			}
+			if (ImGui.IsItemHovered() && ImGui.IsMouseDown(ImGuiMouseButton.Right))
+			{
+				Marshal.StructureToPtr(HeightCamPositionDefault, HeightCamPosition, true);
+				EasyZoomRebornPlugin.Configuration.HeightCamPosition = Marshal.PtrToStructure<float>(HeightCamPosition);
+				EasyZoomRebornPlugin.Configuration.Save();
+			}
 			ImGui.Spacing();
 		}
 
@@ -154,7 +177,7 @@ namespace EasyZoomReborn
 		public SettingsWindow(string name) : base(name)
 		{
 			Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-			Size = new Vector2(400, 250);
+			Size = new Vector2(400 * _scale, 300 *_scale);
 		}
 	}
 }

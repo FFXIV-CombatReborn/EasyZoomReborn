@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Textures.TextureWraps;
+﻿#nullable enable
+using Dalamud.Interface.Textures.TextureWraps;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
