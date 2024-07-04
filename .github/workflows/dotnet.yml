@@ -2,9 +2,8 @@ name: .NET
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    tags:
+      -'*.*.*.*'
 
 jobs:
   build_and_test:
@@ -15,17 +14,20 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
-    - name: Download latest Dalamud build
+        dotnet-version: 8.0.x
+    - name: Download Dalamud Latest
       run: |
-        cd ..
-        curl -O https://goatcorp.github.io/dalamud-distrib/latest.zip
-        mkdir Dalamud
-        unzip latest.zip -d ./Dalamud/bin
+        Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile latest.zip
+        Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
     - uses: actions/checkout@v2
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Zip Plugin
+      run: Compress-Archive -Path .\build\* -DestinationPath .\build\EasyZoomReborn.zip
+    - name: Publish Plugin
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ./build/EasyZoomReborn.zip
+        token: ${{ secrets.GITHUB_TOKEN }}

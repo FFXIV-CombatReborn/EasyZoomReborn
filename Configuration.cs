@@ -2,7 +2,7 @@
 using Dalamud.Plugin;
 using Newtonsoft.Json;
 
-namespace EasyZoom
+namespace EasyZoomReborn
 {
 	public class Configuration : IPluginConfiguration
 	{
@@ -14,7 +14,6 @@ namespace EasyZoom
 		[JsonIgnore] public static readonly float ZoomMaxDefault = 20f;
 		[JsonIgnore] public static readonly float AngleMinDefault = -1.483529806f;
 		[JsonIgnore] public static readonly float AngleMaxDefault = 0.7853981853f;
-		[JsonIgnore] public static readonly float UpDownDefault = -0.2199999988f;
 
 		public int Version { get; set; }
 
@@ -31,16 +30,16 @@ namespace EasyZoom
 
 
 		// Add any other properties or methods here.
-		[JsonIgnore] private DalamudPluginInterface pluginInterface;
+		[JsonIgnore] private IDalamudPluginInterface _pluginInterface;
 
-		public void Initialize(DalamudPluginInterface pluginInterface)
+		public void Initialize(IDalamudPluginInterface dalamudPluginInterface)
 		{
-			this.pluginInterface = pluginInterface;
+			this._pluginInterface = dalamudPluginInterface;
 		}
 
 		public void Save()
 		{
-			this.pluginInterface.SavePluginConfig(this);
+			this._pluginInterface.SavePluginConfig(this);
 		}
 	}
 }
