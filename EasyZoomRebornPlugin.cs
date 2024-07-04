@@ -22,6 +22,8 @@ namespace EasyZoomReborn
 		public static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
 		public static UiBuilder UiBuilder { get; private set; } = null!;
 
+		public static ITextureProvider TextureProvider { get; private set; } = null!;
+
 
         public static Configuration Configuration;
         private static WindowSystem _windowSystem = null!;
@@ -50,7 +52,9 @@ namespace EasyZoomReborn
 			IDalamudPluginInterface pluginInterface,
 			ISigScanner sigScanner,
 			IGameInteropProvider gameInteropProvider,
-			IPluginLog pluginLog
+			IPluginLog pluginLog,
+			ITextureProvider textureProvider
+			
 		)
 		{
 			ClientState = clientState;
@@ -60,6 +64,7 @@ namespace EasyZoomReborn
 			SigScanner = sigScanner;
 			UiBuilder = (UiBuilder)PluginInterface.UiBuilder;
 			PluginLog = pluginLog;
+			TextureProvider = textureProvider;
 
 			ZeroFloat = Marshal.AllocHGlobal(4);
 			Marshal.StructureToPtr(0f, ZeroFloat, true);

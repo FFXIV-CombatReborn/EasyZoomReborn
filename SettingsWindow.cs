@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
+using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
 using static EasyZoomReborn.EasyZoomRebornPlugin;
@@ -14,6 +15,7 @@ namespace EasyZoomReborn
 	{
 		private Vector2 _windowPos = Vector2.Zero;
 		private float _scale => ImGuiHelpers.GlobalScale;
+		private string imageUrl = "https://raw.githubusercontent.com/FFXIV-CombatReborn/RebornAssets/main/IconAssets/EZR_Icon.png";
 		
 		
 		public override void Draw()
@@ -22,6 +24,11 @@ namespace EasyZoomReborn
         
 			if (ImGui.BeginChild("LeftSide", new Vector2(125, 0), true))  // Left-child window
 			{
+				if (Utils.TryGetTextureWrap(imageUrl, out var texture))
+				{
+					ImGui.Image(texture.ImGuiHandle, new(texture.Width/4, texture.Height/4));
+				}
+				
 				if (ImGui.Button("Support on Ko-fi", new Vector2(104 * _scale, 24 * _scale)))
 				{
 					OpenUrl("https://ko-fi.com/incognitowater");
