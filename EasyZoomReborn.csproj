@@ -6,6 +6,10 @@
     <Version>1.0.0.1</Version>
   </PropertyGroup>
 
+	<ItemGroup>
+		<Content Include="EasyZoomReborn.json" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+	
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>none</DebugType>

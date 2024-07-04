@@ -3,7 +3,7 @@
   "Author": "IncognitoWater",
   "Punchline": "Easy zoom distance unlock and fov control. /ez opens the EasyZoomReborn configuration window.",
   "Description": "Easy zoom distance unlock and fov control. /ez Opens the EasyZoomReborn configuration window.",
-  "RepoUrl": "None",
+  "RepoUrl": "https://github.com/IncognitoWater/EasyZoomReborn",
   "DalamudApiLevel": 10,
   "Tags": [ "zoom", "Camera" ]
 }
