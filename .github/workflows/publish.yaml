@@ -27,8 +27,6 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore -c Release -p:AssemblyVersion=${{ env.tag }} -p:FileVersion=${{ env.tag }} -p:PackageVersion=${{ env.tag }} -p:InformationalVersion=${{ env.tag }}
-    - name: Zip Plugin
-      run: Compress-Archive -Path .\bin\Release\net8.0-windows\* -DestinationPath .\bin\EasyZoomReborn.zip
     - name: Publish Plugin
       uses: softprops/action-gh-release@v2
       with:
