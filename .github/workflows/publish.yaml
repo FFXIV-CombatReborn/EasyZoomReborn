@@ -21,11 +21,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore -c Release --output .\build
+      run: dotnet build --no-restore
     - name: Zip Plugin
-      run: Compress-Archive -Path .\build\* -DestinationPath .\build\EasyZoomReborn.zip
+      run: Compress-Archive -Path .\bin\Debug\net8.0-windows\* -DestinationPath .\bin\EasyZoomReborn.zip
     - name: Publish Plugin
       uses: softprops/action-gh-release@v2
       with:
-        files: ./build/EasyZoomReborn.zip
+        files: ./bin/EasyZoomReborn.zip
         token: ${{ secrets.GITHUB_TOKEN }}
