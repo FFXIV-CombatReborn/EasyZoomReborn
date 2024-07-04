@@ -5,5 +5,5 @@
   "Description": "Easy zoom distance unlock and fov control. /ez Opens the EasyZoomReborn configuration window.",
   "RepoUrl": "None",
   "DalamudApiLevel": 10,
-  "Tags": [ "zoom" ]
+  "Tags": [ "zoom", "Camera" ]
 }
