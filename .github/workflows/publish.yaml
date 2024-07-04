@@ -32,5 +32,5 @@ jobs:
     - name: Publish Plugin
       uses: softprops/action-gh-release@v2
       with:
-        files: ./bin/EasyZoomReborn.zip
+        files: .\bin\Release\net8.0-windows\EasyZoomReborn\latest.zip
         token: ${{ secrets.GITHUB_TOKEN }}
