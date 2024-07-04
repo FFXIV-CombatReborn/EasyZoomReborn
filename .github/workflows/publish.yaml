@@ -26,7 +26,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore -p:AssemblyVersion=${{ env.tag }}
+      run: dotnet build --no-restore -p:AssemblyVersion=${{ env.tag }} -p:FileVersion=${{ env.tag }} -p:PackageVersion=${{ env.tag }} -p:InformationalVersion=${{ env.tag }}
     - name: Zip Plugin
       run: Compress-Archive -Path .\bin\Debug\net8.0-windows\* -DestinationPath .\bin\EasyZoomReborn.zip
     - name: Publish Plugin
