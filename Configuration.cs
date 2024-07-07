@@ -14,7 +14,7 @@ namespace EasyZoomReborn
 		[JsonIgnore] public static readonly float ZoomMaxDefault = 20f;
 		[JsonIgnore] public static readonly float AngleMinDefault = -1.483529806f;
 		[JsonIgnore] public static readonly float AngleMaxDefault = 0.7853981853f;
-		[JsonIgnore] public static readonly float HeightCamPositionDefault = 0.0f;
+		[JsonIgnore] public static readonly float LookAtHeightOffsetDefault = 0.0f;
 
 		public int Version { get; set; }
 
@@ -29,7 +29,7 @@ namespace EasyZoomReborn
 		public float ZoomMin = ZoomMinDefault;
 		public float ZoomMax = ZoomMaxDefault;
 
-		public float HeightCamPosition = HeightCamPositionDefault;
+		public float LookAtHeightOffset = LookAtHeightOffsetDefault;
 
 
 		// Add any other properties or methods here.
