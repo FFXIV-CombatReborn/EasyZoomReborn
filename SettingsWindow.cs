@@ -127,15 +127,15 @@ namespace EasyZoomReborn
 				EasyZoomRebornPlugin.Configuration.Save();
 			}
 			
-			if (ImGui.DragScalar("Camera Height", ImGuiDataType.Float, HeightCamPosition, 0.05f, MinFloatHeight, MaxFloatHeight, Marshal.PtrToStructure<float>(HeightCamPosition).ToString(), ImGuiSliderFlags.Logarithmic))
+			if (ImGui.DragScalar("Look At Height Offset", ImGuiDataType.Float, LookAtHeightOffset, 0.05f, MinFloatHeight, MaxFloatHeight, Marshal.PtrToStructure<float>(LookAtHeightOffset).ToString(), ImGuiSliderFlags.Logarithmic))
 			{
-				EasyZoomRebornPlugin.Configuration.HeightCamPosition = Marshal.PtrToStructure<float>(HeightCamPosition);
+				EasyZoomRebornPlugin.Configuration.LookAtHeightOffset = Marshal.PtrToStructure<float>(LookAtHeightOffset);
 				EasyZoomRebornPlugin.Configuration.Save();
 			}
 			if (ImGui.IsItemHovered() && ImGui.IsMouseDown(ImGuiMouseButton.Right))
 			{
-				Marshal.StructureToPtr(HeightCamPositionDefault, HeightCamPosition, true);
-				EasyZoomRebornPlugin.Configuration.HeightCamPosition = Marshal.PtrToStructure<float>(HeightCamPosition);
+				Marshal.StructureToPtr(LookAtHeightOffsetDefault, LookAtHeightOffset, true);
+				EasyZoomRebornPlugin.Configuration.LookAtHeightOffset = Marshal.PtrToStructure<float>(LookAtHeightOffset);
 				EasyZoomRebornPlugin.Configuration.Save();
 			}
 			ImGui.Spacing();
@@ -177,7 +177,7 @@ namespace EasyZoomReborn
 		public SettingsWindow(string name) : base(name)
 		{
 			Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse;
-			Size = new Vector2(400 * _scale, 300 *_scale);
+			Size = new Vector2(480 * _scale, 300 *_scale);
 		}
 	}
 }

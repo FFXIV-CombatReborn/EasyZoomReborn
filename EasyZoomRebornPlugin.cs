@@ -117,6 +117,7 @@ namespace EasyZoomReborn
 			Marshal.StructureToPtr(Configuration.FovMax, FovMax, true);
 			Marshal.StructureToPtr(Configuration.ZoomMin, ZoomMin, true);
 			Marshal.StructureToPtr(Configuration.ZoomMax, ZoomMax, true);
+			Marshal.StructureToPtr(Configuration.LookAtHeightOffset,LookAtHeightOffset,true);
 
 			Hook();
 		}
@@ -143,6 +144,7 @@ namespace EasyZoomReborn
 			Marshal.StructureToPtr(Configuration.FovMax, FovMax, true);
 			Marshal.StructureToPtr(Configuration.ZoomMin, ZoomMin, true);
 			Marshal.StructureToPtr(Configuration.ZoomMax, ZoomMax, true);
+			Marshal.StructureToPtr(Configuration.LookAtHeightOffset,LookAtHeightOffset,true);
 		}
         private static GameCamera* Cam => CameraManager->worldCamera;
 
@@ -155,7 +157,7 @@ namespace EasyZoomReborn
         public static IntPtr AngleMin => (IntPtr)(&Cam->minVRotation);
         public static IntPtr AngleMax => (IntPtr)(&Cam->maxVRotation);
 
-        public static IntPtr HeightCamPosition => (IntPtr)(&Cam->lookAtHeightOffset);
+        public static IntPtr LookAtHeightOffset => (IntPtr)(&Cam->lookAtHeightOffset);
 
 
         public static IntPtr ZeroFloat;
