@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
-using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
 using static EasyZoomReborn.EasyZoomRebornPlugin;
@@ -24,25 +23,25 @@ namespace EasyZoomReborn
         
 			if (ImGui.BeginChild("LeftSide", new Vector2(125, 0), true))  // Left-child window
 			{
-				if (Utils.TryGetTextureWrap(imageUrl, out var texture))
-				{
-					// Calculate padding for ImGui image
-					Vector2 windowSize = ImGui.GetContentRegionAvail();
-					Vector2 imageSize = new(texture.Width / 3 * _scale, texture.Height / 3 * _scale);
-					Vector2 padding = (windowSize - imageSize) * 0.5f;
-					ImGui.Dummy(new Vector2(0, padding.Y - 20.0f));
-					ImGui.SameLine(padding.X);
-					ImGui.Image(texture.ImGuiHandle, imageSize);
-				}
+                if (Utils.TryGetTextureWrap(imageUrl, out var texture) && texture != null)
+                {
+                    // Calculate padding for ImGui image
+                    Vector2 windowSize = ImGui.GetContentRegionAvail();
+                    Vector2 imageSize = new(texture.Width / 3 * _scale, texture.Height / 3 * _scale);
+                    Vector2 padding = (windowSize - imageSize) * 0.5f;
+                    ImGui.Dummy(new Vector2(0, padding.Y - 20.0f));
+                    ImGui.SameLine(padding.X);
+                    ImGui.Image(texture.ImGuiHandle, imageSize);
+                }
 
-				// Center the ImGui button
-				Vector2 buttonSize = new Vector2(104 * _scale, 24 * _scale);
+                // Center the ImGui button
+                Vector2 buttonSize = new Vector2(104 * _scale, 24 * _scale);
 				float buttonPosX = (ImGui.GetContentRegionAvail().X - buttonSize.X) * 0.5f;
 				ImGui.SetCursorPosX(buttonPosX);
 
 				if (ImGui.Button("Support on Ko-fi", buttonSize))
 				{
-					OpenUrl("https://ko-fi.com/incognitowater");
+					OpenUrl("https://ko-fi.com/ltscombatreborn");
 				}
 			}
 			ImGui.EndChild();
@@ -68,12 +67,17 @@ namespace EasyZoomReborn
 
 		public void DrawGeneralTab()
 		{
-			if (ImGui.Checkbox("Disable camera collision", ref EasyZoomRebornPlugin.Configuration.NoCollision))
-			{
-				SetCamNoCollision(EasyZoomRebornPlugin.Configuration.NoCollision);
-				EasyZoomRebornPlugin.Configuration.Save();
-			}
-			ImGui.SliderScalar("FOV", ImGuiDataType.Float, FovCurrent, FovMin, FovMax, $"{Marshal.PtrToStructure<float>(FovCurrent)} ({Marshal.PtrToStructure<float>(FovCurrent) * (180 / Math.PI):F2}°)");
+            //if (ImGui.Checkbox("Disable camera collision", ref EasyZoomRebornPlugin.Configuration.NoCollision))
+            //{
+            //	SetCamNoCollision(EasyZoomRebornPlugin.Configuration.NoCollision);
+            //	EasyZoomRebornPlugin.Configuration.Save();
+            //}
+
+            ImGui.BeginDisabled(true);
+            ImGui.Checkbox("Disable camera collision (Currently broken)", ref EasyZoomRebornPlugin.Configuration.NoCollision2);
+            ImGui.EndDisabled();
+
+            ImGui.SliderScalar("FOV", ImGuiDataType.Float, FovCurrent, FovMin, FovMax, $"{Marshal.PtrToStructure<float>(FovCurrent)} ({Marshal.PtrToStructure<float>(FovCurrent) * (180 / Math.PI):F2}°)");
 			if (ImGui.IsItemHovered() && ImGui.IsMouseDown(ImGuiMouseButton.Right))
 				Marshal.StructureToPtr(FovDefault, FovCurrent, true);
 

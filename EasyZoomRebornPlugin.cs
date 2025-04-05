@@ -6,7 +6,6 @@ using Dalamud.Game.Command;
 using Dalamud.Hooking;
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
-using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 
@@ -14,31 +13,27 @@ namespace EasyZoomReborn
 {
 	public unsafe class EasyZoomRebornPlugin : IDalamudPlugin
 	{
-		public static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
-		public static IPluginLog PluginLog { get; private set; } = null!;
-		public static IClientState ClientState { get; private set; } = null!;
-		public static ICommandManager CommandManager { get; private set; } = null!;
-		public static ISigScanner SigScanner { get; private set; } = null!;
-		public static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
-		public static UiBuilder UiBuilder { get; private set; } = null!;
+        public static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
+        public static IPluginLog PluginLog { get; private set; } = null!;
+        public static IClientState ClientState { get; private set; } = null!;
+        public static ICommandManager CommandManager { get; private set; } = null!;
+        public static ISigScanner SigScanner { get; private set; } = null!;
+        public static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
+        public static UiBuilder UiBuilder { get; private set; } = null!;
+        public static ITextureProvider TextureProvider { get; private set; } = null!;
 
-		public static ITextureProvider TextureProvider { get; private set; } = null!;
-
-
-        public static Configuration Configuration;
+        public static Configuration Configuration { get; private set; } = null!;
         private static WindowSystem _windowSystem = null!;
-		private  SettingsWindow _settingsWindow;
+        private SettingsWindow _settingsWindow = null!;
 
-		private static readonly CameraManager* CameraManager = (CameraManager*)FFXIVClientStructs.FFXIV.Client.Game.Control.CameraManager.Instance();
+        private static readonly CameraManager* CameraManager = (CameraManager*)FFXIVClientStructs.FFXIV.Client.Game.Control.CameraManager.Instance();
         private static IntPtr _camCollisionJmp;
-		private static IntPtr _camDistanceResetFunc;
-		private static readonly byte[] CamDistanceOriginalBytes = new byte[8];
-
-        
+        private static IntPtr _camDistanceResetFunc;
+        private static readonly byte[] CamDistanceOriginalBytes = new byte[8];
 
         public static float ZoomDelta = 0.75f;
         private delegate float GetZoomDeltaDelegate();
-        private static Hook<GetZoomDeltaDelegate> _getZoomDeltaHook;
+        private static Hook<GetZoomDeltaDelegate>? _getZoomDeltaHook;
         private static float GetZoomDeltaDetour()
         {
             return Cam->currentZoom * 0.075f;
@@ -46,83 +41,79 @@ namespace EasyZoomReborn
 
         public string Name => "EasyZoomReborn";
 
-		public EasyZoomRebornPlugin(
-			IClientState clientState,
-			ICommandManager commandManager,
-			IDalamudPluginInterface pluginInterface,
-			ISigScanner sigScanner,
-			IGameInteropProvider gameInteropProvider,
-			IPluginLog pluginLog,
-			ITextureProvider textureProvider
-			
-		)
-		{
-			ClientState = clientState;
-			CommandManager = commandManager;
-			PluginInterface = pluginInterface;
-			GameInteropProvider = gameInteropProvider;
-			SigScanner = sigScanner;
-			UiBuilder = (UiBuilder)PluginInterface.UiBuilder;
-			PluginLog = pluginLog;
-			TextureProvider = textureProvider;
+        public EasyZoomRebornPlugin(
+            IClientState clientState,
+            ICommandManager commandManager,
+            IDalamudPluginInterface pluginInterface,
+            ISigScanner sigScanner,
+            IGameInteropProvider gameInteropProvider,
+            IPluginLog pluginLog,
+            ITextureProvider textureProvider
+        )
+        {
+            ClientState = clientState;
+            CommandManager = commandManager;
+            PluginInterface = pluginInterface;
+            GameInteropProvider = gameInteropProvider;
+            SigScanner = sigScanner;
+            UiBuilder = (UiBuilder)PluginInterface.UiBuilder;
+            PluginLog = pluginLog;
+            TextureProvider = textureProvider;
 
-			ZeroFloat = Marshal.AllocHGlobal(4);
-			Marshal.StructureToPtr(0f, ZeroFloat, true);
-			MaxFloat = Marshal.AllocHGlobal(4);
-			Marshal.StructureToPtr(10000f, MaxFloat, true);
-			PiFloat = Marshal.AllocHGlobal(4);
-			Marshal.StructureToPtr((float)Math.PI, PiFloat, true);
-			MinFloatHeight = Marshal.AllocHGlobal(4);
-			Marshal.StructureToPtr(-3f, MinFloatHeight, true);
-			MaxFloatHeight = Marshal.AllocHGlobal(4);
-			Marshal.StructureToPtr(3f, MaxFloatHeight, true);
+            ZeroFloat = Marshal.AllocHGlobal(4);
+            Marshal.StructureToPtr(0f, ZeroFloat, true);
+            MaxFloat = Marshal.AllocHGlobal(4);
+            Marshal.StructureToPtr(10000f, MaxFloat, true);
+            PiFloat = Marshal.AllocHGlobal(4);
+            Marshal.StructureToPtr((float)Math.PI, PiFloat, true);
+            MinFloatHeight = Marshal.AllocHGlobal(4);
+            Marshal.StructureToPtr(-3f, MinFloatHeight, true);
+            MaxFloatHeight = Marshal.AllocHGlobal(4);
+            Marshal.StructureToPtr(3f, MaxFloatHeight, true);
 
-			Configuration = (Configuration)pluginInterface.GetPluginConfig() ?? new Configuration();
-			Configuration.Initialize(pluginInterface);
+            Configuration = (Configuration)(pluginInterface.GetPluginConfig() ?? new Configuration());
+            Configuration.Initialize(pluginInterface);
 
-			CreateWindows();
+            CreateWindows();
 
-			UiBuilder.Draw += Draw;
-			UiBuilder.OpenConfigUi += OpenConfig;
+            UiBuilder.Draw += Draw;
+            UiBuilder.OpenConfigUi += OpenConfig;
 
-			CommandManager.AddHandler(
-				"/ez",
-				new CommandInfo(CommandSettings)
-				{
-					HelpMessage = "Opens the EasyZoomReborn configuration window.",
+            CommandManager.AddHandler(
+                "/ez",
+                new CommandInfo(CommandSettings)
+                {
+                    HelpMessage = "Opens the EasyZoomReborn configuration window.",
+                    ShowInHelp = true
+                }
+            );
 
-					ShowInHelp = true
-				}
-			);
-			
-			
-			_camCollisionJmp = sigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8D 45 97 89 83 ?? ?? ?? ??") + 0x1D9; // new
-			_camDistanceResetFunc = sigScanner.ScanText("F3 0F 10 15 ?? ?? ?? ?? EB 0F"); // nop 8 bytes
-			
-			Marshal.Copy(_camDistanceResetFunc, CamDistanceOriginalBytes, 0, 8);
+            _camCollisionJmp = sigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8D 45 97 89 83 ?? ?? ?? ??") + 0x1D9; // new
+            _camDistanceResetFunc = sigScanner.ScanText("F3 0F 10 15 ?? ?? ?? ?? EB 0F"); // nop 8 bytes
 
+            Marshal.Copy(_camDistanceResetFunc, CamDistanceOriginalBytes, 0, 8);
 
-			ClientState.Login += ClientState_OnLogin;
+            ClientState.Login += ClientState_OnLogin;
 
-			SetCamDistanceNoReset(true);
-			if (Configuration.NoCollision)
-			{
-				SetCamNoCollision(true);
-			}
+            SetCamDistanceNoReset(true);
+            if (Configuration.NoCollision2)
+            {
+                SetCamNoCollision(true);
+            }
 
-			Marshal.StructureToPtr(-1.569f, AngleMin, true);
-			Marshal.StructureToPtr(1.569f, AngleMax, true);
+            Marshal.StructureToPtr(-1.569f, AngleMin, true);
+            Marshal.StructureToPtr(1.569f, AngleMax, true);
 
-			Marshal.StructureToPtr(Configuration.FovMin, FovMin, true);
-			Marshal.StructureToPtr(Configuration.FovMax, FovMax, true);
-			Marshal.StructureToPtr(Configuration.ZoomMin, ZoomMin, true);
-			Marshal.StructureToPtr(Configuration.ZoomMax, ZoomMax, true);
-			Marshal.StructureToPtr(Configuration.LookAtHeightOffset,LookAtHeightOffset,true);
+            Marshal.StructureToPtr(Configuration.FovMin, FovMin, true);
+            Marshal.StructureToPtr(Configuration.FovMax, FovMax, true);
+            Marshal.StructureToPtr(Configuration.ZoomMin, ZoomMin, true);
+            Marshal.StructureToPtr(Configuration.ZoomMax, ZoomMax, true);
+            Marshal.StructureToPtr(Configuration.LookAtHeightOffset, LookAtHeightOffset, true);
 
-			Hook();
-		}
+            Hook();
+        }
 
-		private void Hook()
+        private void Hook()
 		{
             var vtbl = CameraManager->worldCamera->vtbl;
             _getZoomDeltaHook = GameInteropProvider.HookFromAddress<GetZoomDeltaDelegate>(vtbl[28], GetZoomDeltaDetour);
@@ -132,7 +123,7 @@ namespace EasyZoomReborn
 		private void ClientState_OnLogin()
 		{
 			SetCamDistanceNoReset(true);
-			if (Configuration.NoCollision)
+			if (Configuration.NoCollision2)
 			{
 				SetCamNoCollision(true);
 			}
@@ -266,6 +257,7 @@ namespace EasyZoomReborn
     [StructLayout(LayoutKind.Explicit)]
     internal unsafe struct CameraManager
     {
+        [FieldOffset(0x0)] public FFXIVClientStructs.FFXIV.Client.Game.Control.CameraManager CS;
         [FieldOffset(0x0)] public GameCamera* worldCamera;
         [FieldOffset(0x8)] public GameCamera* idleCamera;
         [FieldOffset(0x10)] public GameCamera* menuCamera;

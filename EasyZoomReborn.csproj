@@ -1,28 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net9.0-windows</TargetFramework>
-    <LangVersion>preview</LangVersion>
-    <Version>7.1.0.3</Version>
-  </PropertyGroup>
+﻿<Project Sdk="Dalamud.NET.Sdk/12.0.2">
+	<PropertyGroup>
+		<TargetFramework>net9.0-windows</TargetFramework>
+		<LangVersion>preview</LangVersion>
+		<Version>7.1.0.3</Version>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<Content Include="manifest.json" CopyToOutputDirectory="Always" />
 	</ItemGroup>
-	
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>none</DebugType>
-  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>none</DebugType>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DebugType>none</DebugType>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="12.0.0" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DebugType>none</DebugType>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<Reference Include="Dalamud">
