@@ -12,6 +12,7 @@
     "jobs"
   ],
   "DalamudApiLevel": 12,
+  "TestingDalamudApiLevel": 12,
   "LoadRequiredState": 0,
   "LoadSync": false,
   "CanUnloadAsync": false,
