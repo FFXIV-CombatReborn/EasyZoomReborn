@@ -22,22 +22,21 @@ public static class Utils
     private static readonly List<Func<byte[], byte[]>> _conversionsToBitmap = new() { b => b, };
 
     static volatile bool ThreadRunning = false;
-    internal static HttpClient httpClient = null;
-    
-	public static bool TryGetTextureWrap(string url, out IDalamudTextureWrap textureWrap)
-	{
-		ImageLoadingResult result;
-		if (!CachedTextures.TryGetValue(url, out result))
-		{
-			result = new();
-			CachedTextures[url] = result;
-			BeginThreadIfNotRunning();
-		}
-		textureWrap = result.Texture;
-		return result.Texture != null;
-	}
-	
-	internal static void BeginThreadIfNotRunning()
+    internal static HttpClient httpClient = new HttpClient();
+
+    public static bool TryGetTextureWrap(string url, out IDalamudTextureWrap? textureWrap)
+    {
+        if (!CachedTextures.TryGetValue(url, out var result))
+        {
+            result = new();
+            CachedTextures[url] = result;
+            BeginThreadIfNotRunning();
+        }
+        textureWrap = result.Texture;
+        return result.Texture != null;
+    }
+
+    internal static void BeginThreadIfNotRunning()
     {
         httpClient ??= new()
         {
@@ -67,7 +66,7 @@ public static class Utils
                                     result.EnsureSuccessStatusCode();
                                     var content = result.Content.ReadAsByteArrayAsync().Result;
 
-                                    IDalamudTextureWrap texture = null;
+                                    IDalamudTextureWrap? texture = null;
                                     foreach (var conversion in _conversionsToBitmap)
                                     {
                                         if (conversion == null) continue;
@@ -79,7 +78,7 @@ public static class Utils
                                         }
                                         catch (Exception ex)
                                         {
-                                            EasyZoomRebornPlugin.PluginLog.Fatal("Exception in utils try get texture");
+                                            EasyZoomRebornPlugin.PluginLog.Fatal("Exception in utils try get texture: " + ex.Message);
                                         }
                                     }
                                     keyValuePair.Value.TextureWrap = texture;

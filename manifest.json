@@ -4,6 +4,8 @@
   "InternalName": "EasyZoomReborn",
   "Description": "Easy zoom distance unlock and fov control. /ez opens the EasyZoomReborn configuration window.",
   "ApplicableVersion": "any",
+  "DalamudApiLevel": 12,
+  "TestingDalamudApiLevel": 12,
   "Tags": [
     "zoom",
     "Camera"
@@ -11,8 +13,6 @@
   "CategoryTags": [
     "jobs"
   ],
-  "DalamudApiLevel": 12,
-  "TestingDalamudApiLevel": 12,
   "LoadRequiredState": 0,
   "LoadSync": false,
   "CanUnloadAsync": false,
