@@ -2,6 +2,7 @@
   "Author": "The Combat Reborn Team",
   "Name": "EasyZoom Reborn",
   "InternalName": "EasyZoomReborn",
+  "RepoUrl": "https://github.com/FFXIV-CombatReborn/EasyZoomReborn",
   "Description": "Easy zoom distance unlock and fov control. /ez opens the EasyZoomReborn configuration window.",
   "ApplicableVersion": "any",
   "DalamudApiLevel": 12,
