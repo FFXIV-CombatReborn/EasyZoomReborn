@@ -1,8 +1,8 @@
-﻿<Project Sdk="Dalamud.NET.Sdk/12.0.2">
+﻿<Project Sdk="Dalamud.NET.Sdk/13.0.0">
 	<PropertyGroup>
 		<TargetFramework>net9.0-windows</TargetFramework>
 		<LangVersion>preview</LangVersion>
-		<Version>7.1.0.3</Version>
+		<Version>7.3.0.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,14 +26,6 @@
 		</Reference>
 		<Reference Include="FFXIVClientStructs">
 			<HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="ImGui.NET">
-			<HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\ImGui.NET.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="ImGuiScene">
-			<HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\ImGuiScene.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Lumina">
