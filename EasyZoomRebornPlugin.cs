@@ -1,5 +1,4 @@
-﻿using Dalamud.Game;
-using Dalamud.Game.Command;
+﻿using Dalamud.Game.Command;
 using Dalamud.Hooking;
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
@@ -21,6 +20,7 @@ namespace EasyZoomReborn
         public static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
         public static UiBuilder UiBuilder { get; private set; } = null!;
         public static ITextureProvider TextureProvider { get; private set; } = null!;
+        public static IObjectTable ObjectTable { get; private set; } = null!;
 
         public static Configuration Configuration { get; private set; } = null!;
         private static WindowSystem _windowSystem = null!;
@@ -48,7 +48,8 @@ namespace EasyZoomReborn
             ISigScanner sigScanner,
             IGameInteropProvider gameInteropProvider,
             IPluginLog pluginLog,
-            ITextureProvider textureProvider
+            ITextureProvider textureProvider,
+            IObjectTable objectTable
         )
         {
             ClientState = clientState;
@@ -59,6 +60,7 @@ namespace EasyZoomReborn
             UiBuilder = (UiBuilder)PluginInterface.UiBuilder;
             PluginLog = pluginLog;
             TextureProvider = textureProvider;
+            ObjectTable = objectTable;
 
             ZeroFloat = Marshal.AllocHGlobal(4);
             Marshal.StructureToPtr(0f, ZeroFloat, true);
@@ -217,7 +219,7 @@ namespace EasyZoomReborn
 
 		private void Draw()
 		{
-			if (Configuration == null || ClientState.LocalPlayer == null) return;
+			if (Configuration == null || ObjectTable.LocalPlayer == null) return;
 			_windowSystem?.Draw();
 		}
 
