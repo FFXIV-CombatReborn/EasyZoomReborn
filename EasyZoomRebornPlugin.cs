@@ -21,8 +21,9 @@ namespace EasyZoomReborn
         public static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
         public static UiBuilder UiBuilder { get; private set; } = null!;
         public static ITextureProvider TextureProvider { get; private set; } = null!;
+		public static IObjectTable ObjectTable { get; private set; } = null!;
 
-        public static Configuration Configuration { get; private set; } = null!;
+		public static Configuration Configuration { get; private set; } = null!;
         private static WindowSystem _windowSystem = null!;
         private SettingsWindow _settingsWindow = null!;
 
@@ -48,8 +49,9 @@ namespace EasyZoomReborn
             ISigScanner sigScanner,
             IGameInteropProvider gameInteropProvider,
             IPluginLog pluginLog,
-            ITextureProvider textureProvider
-        )
+			ITextureProvider textureProvider,
+			IObjectTable objectTable
+		)
         {
             ClientState = clientState;
             CommandManager = commandManager;
@@ -59,8 +61,9 @@ namespace EasyZoomReborn
             UiBuilder = (UiBuilder)PluginInterface.UiBuilder;
             PluginLog = pluginLog;
             TextureProvider = textureProvider;
+			ObjectTable = objectTable;
 
-            ZeroFloat = Marshal.AllocHGlobal(4);
+			ZeroFloat = Marshal.AllocHGlobal(4);
             Marshal.StructureToPtr(0f, ZeroFloat, true);
             MaxFloat = Marshal.AllocHGlobal(4);
             Marshal.StructureToPtr(10000f, MaxFloat, true);
@@ -217,8 +220,8 @@ namespace EasyZoomReborn
 
 		private void Draw()
 		{
-			if (Configuration == null) return;
-			_windowSystem?.Draw();
+			if (Configuration == null || ObjectTable.LocalPlayer == null) return; 
+            _windowSystem?.Draw();
 		}
 
 		#region IDisposable Support
