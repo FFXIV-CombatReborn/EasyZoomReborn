@@ -217,7 +217,7 @@ namespace EasyZoomReborn
 
 		private void Draw()
 		{
-			if (Configuration == null || ClientState.LocalPlayer == null) return;
+			if (Configuration == null) return;
 			_windowSystem?.Draw();
 		}
 
