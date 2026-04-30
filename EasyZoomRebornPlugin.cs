@@ -33,6 +33,7 @@ namespace EasyZoomReborn
         private static readonly byte[] CamDistanceOriginalBytes = new byte[8];
 
         public static float ZoomDelta = 0.75f;
+        private const int ZoomModeToggleSpeedMultiplierVTableIndex = 29;
         private delegate float GetZoomDeltaDelegate();
         private static Hook<GetZoomDeltaDelegate>? _getZoomDeltaHook;
         private static float GetZoomDeltaDetour()
@@ -147,7 +148,7 @@ namespace EasyZoomReborn
                 _getZoomDeltaHook?.Dispose(); // Dispose existing hook
 
                 var vtbl = Cam->vtbl;
-                _getZoomDeltaHook = GameInteropProvider.HookFromAddress<GetZoomDeltaDelegate>(vtbl[28], GetZoomDeltaDetour);
+                _getZoomDeltaHook = GameInteropProvider.HookFromAddress<GetZoomDeltaDelegate>(vtbl[ZoomModeToggleSpeedMultiplierVTableIndex], GetZoomDeltaDetour);
                 _getZoomDeltaHook.Enable();
             }
             catch (Exception ex)
