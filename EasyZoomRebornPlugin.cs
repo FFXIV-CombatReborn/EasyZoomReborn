@@ -6,7 +6,6 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace EasyZoomReborn
@@ -30,7 +29,7 @@ namespace EasyZoomReborn
         private static readonly CameraManager* CameraManager = (CameraManager*)FFXIVClientStructs.FFXIV.Client.Game.Control.CameraManager.Instance();
         private static IntPtr _camCollisionJmp;
         private static IntPtr _camDistanceResetFunc;
-        private static readonly byte[] CamDistanceOriginalBytes = new byte[8];
+        private static readonly byte[] CamDistanceOriginalBytes = new byte[4];
 
         public static float ZoomDelta = 0.75f;
         private const int ZoomModeToggleSpeedMultiplierVTableIndex = 29;
@@ -118,8 +117,8 @@ namespace EasyZoomReborn
         {
             try
             {
-                _camCollisionJmp = SigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8D 45 97 89 83 ?? ?? ?? ??") + 0x1D9;
-                _camDistanceResetFunc = SigScanner.ScanText("F3 0F 10 15 ?? ?? ?? ?? EB 0F");
+                _camCollisionJmp = SigScanner.ScanText("84 C0 0F 84 ?? ?? ?? ?? F3 0F 10 44 24 58 41 B7 01 F3 0F 10 4C 24 50") + 0x2;
+                _camDistanceResetFunc = SigScanner.ScanText("7A 02 74 43 F3 0F 10 89 24 01 00 00 48 8D 91 28 01 00 00 0F 2F D1 48 8D 44 24 08 41 C7 00 00 00 A0 41");
 
                 if (_camCollisionJmp == IntPtr.Zero || _camDistanceResetFunc == IntPtr.Zero)
                 {
@@ -127,7 +126,7 @@ namespace EasyZoomReborn
                     return;
                 }
 
-                Marshal.Copy(_camDistanceResetFunc, CamDistanceOriginalBytes, 0, 8);
+                Marshal.Copy(_camDistanceResetFunc, CamDistanceOriginalBytes, 0, CamDistanceOriginalBytes.Length);
             }
             catch (Exception ex)
             {
@@ -195,7 +194,7 @@ namespace EasyZoomReborn
 
 		internal static void SetCamDistanceNoReset(bool on)
 		{
-			Dalamud.SafeMemory.WriteBytes(_camDistanceResetFunc, @on ? [.. Enumerable.Repeat((byte)0x90, 8)] : CamDistanceOriginalBytes);
+			Dalamud.SafeMemory.WriteBytes(_camDistanceResetFunc, @on ? [0xEB, 0x45, 0x90, 0x90] : CamDistanceOriginalBytes);
 		}
         internal static void SetCamNoCollision(bool on)
 		{

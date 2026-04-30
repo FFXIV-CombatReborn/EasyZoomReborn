@@ -62,15 +62,15 @@ namespace EasyZoomReborn
 
         public static void DrawGeneralTab()
         {
-            //if (ImGui.Checkbox("Disable camera collision", ref EasyZoomRebornPlugin.Configuration.NoCollision))
-            //{
-            //	SetCamNoCollision(EasyZoomRebornPlugin.Configuration.NoCollision);
-            //	EasyZoomRebornPlugin.Configuration.Save();
-            //}
+            if (ImGui.Checkbox("Disable camera collision", ref EasyZoomRebornPlugin.Configuration.NoCollision2))
+            {
+                SetCamNoCollision(EasyZoomRebornPlugin.Configuration.NoCollision2);
+                EasyZoomRebornPlugin.Configuration.Save();
+            }
 
-            ImGui.BeginDisabled(true);
-            ImGui.Checkbox("Disable camera collision (Currently broken)", ref EasyZoomRebornPlugin.Configuration.NoCollision2);
-            ImGui.EndDisabled();
+            //ImGui.BeginDisabled(true);
+            //ImGui.Checkbox("Disable camera collision (Currently broken)", ref EasyZoomRebornPlugin.Configuration.NoCollision2);
+            //ImGui.EndDisabled();
 
             float fovCurrent = Marshal.PtrToStructure<float>(FovCurrent);
             float fovMin = Marshal.PtrToStructure<float>(FovMin);
