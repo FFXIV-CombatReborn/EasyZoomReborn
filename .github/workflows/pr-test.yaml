@@ -1,0 +1,29 @@
+name: Build
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  Build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          submodules: true
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Download Dalamud Latest
+        run: |
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile latest.zip
+          Expand-Archive -Force latest.zip -DestinationPath "$env:AppData\XIVLauncher\addon\Hooks\dev"
+
+      - name: Restore dependencies
+        run: dotnet restore EasyZoomReborn.csproj
+
+      - name: Build Plugin
+        un: dotnet build --no-restore -c Release EasyZoomReborn.csproj -p:AssemblyVersion=${{ env.tag }} -p:FileVersion=${{ env.tag }} -p:InformationalVersion=${{ env.tag }} --output .\build
